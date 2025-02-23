@@ -32,51 +32,53 @@ def bitonic_sort(arr, ascending=True):
     # Create a copy of the list
     arr = arr.copy()
     
-    # Find next power of 2 
-    def next_power_of_two(n):
+    def _merge_and_sort(arr, low, count, direction):
+        """
+        Merge and sort a sequence
+        
+        Args:
+            arr (list): The list being sorted
+            low (int): Starting index
+            count (int): Number of elements to sort
+            direction (bool): Sort direction (ascending or descending)
+        """
+        if count <= 1:
+            return
+        
+        mid = count // 2
+        
+        # Sort first half in ascending order
+        for i in range(low, low + mid):
+            for j in range(i + 1, low + count):
+                if direction == (arr[i] > arr[j]):
+                    arr[i], arr[j] = arr[j], arr[i]
+        
+        # Recursively sort both halves
+        _merge_and_sort(arr, low, mid, True)
+        _merge_and_sort(arr, low + mid, count - mid, False)
+        
+        # Final merge to create balanced bitonic sequence
+        for i in range(low, low + mid):
+            for j in range(i + mid, low + count):
+                if direction == (arr[i] > arr[j]):
+                    arr[i], arr[j] = arr[j], arr[i]
+    
+    # Find next power of 2 for zero-padding 
+    def _next_power_of_two(n):
         power = 1
         while power < n:
             power *= 2
         return power
     
-    def compare_and_swap(arr, i, j, direction):
-        """Compare and swap elements to maintain bitonic sequence"""
-        if direction == (arr[i] > arr[j]):
-            arr[i], arr[j] = arr[j], arr[i]
-    
-    def bitonic_merge(arr, low, count, direction):
-        """Merge a bitonic sequence"""
-        if count > 1:
-            k = count // 2
-            for i in range(low, low + k):
-                compare_and_swap(arr, i, i + k, direction)
-            
-            bitonic_merge(arr, low, k, direction)
-            bitonic_merge(arr, low + k, k, direction)
-    
-    def bitonic_sort_recursive(arr, low, count, direction):
-        """Recursively sort a bitonic sequence"""
-        if count > 1:
-            k = count // 2
-            
-            # Sort first half in ascending order
-            bitonic_sort_recursive(arr, low, k, True)
-            
-            # Sort second half in descending order
-            bitonic_sort_recursive(arr, low + k, k, False)
-            
-            # Merge entire sequence
-            bitonic_merge(arr, low, count, direction)
-    
     # Pad the input list to next power of 2
     original_length = len(arr)
-    padded_length = next_power_of_two(original_length)
+    padded_length = _next_power_of_two(original_length)
     
     # Create padded list, repeating the last element if necessary
     padded_arr = arr + [arr[-1]] * (padded_length - original_length)
     
     # Perform bitonic sort
-    bitonic_sort_recursive(padded_arr, 0, padded_length, ascending)
+    _merge_and_sort(padded_arr, 0, padded_length, ascending)
     
     # Return only the original number of elements
     return padded_arr[:original_length]
