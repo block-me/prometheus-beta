@@ -19,6 +19,10 @@ def count_equal_sum_partitions(numbers):
     if not all(isinstance(num, int) for num in numbers):
         raise ValueError("All elements must be integers")
     
+    # Ensure distinct numbers
+    if len(set(numbers)) != len(numbers):
+        return 0
+    
     # Handle edge cases
     if len(numbers) == 0:
         return 0
@@ -31,32 +35,15 @@ def count_equal_sum_partitions(numbers):
     # Target sum for each subset
     target_sum = total_sum // 2
     
-    # Dynamic programming solution using meet-in-the-middle approach
-    def find_subset_counts(arr):
-        # Generate all possible subset sums
-        subset_sums = {0: 1}
-        for num in arr:
-            new_sums = subset_sums.copy()
-            for curr_sum, count in subset_sums.items():
-                new_sum = curr_sum + num
-                new_sums[new_sum] = new_sums.get(new_sum, 0) + count
-            subset_sums = new_sums
-        return subset_sums
+    # Use dynamic programming
+    dp = [0] * (target_sum + 1)
+    dp[0] = 1
     
-    # Split the list into two halves
-    mid = len(numbers) // 2
-    left_half = numbers[:mid]
-    right_half = numbers[mid:]
+    # Compute number of subsets with each sum
+    for num in numbers:
+        for j in range(target_sum, num - 1, -1):
+            dp[j] += dp[j - num]
     
-    # Find subset sums for both halves
-    left_sums = find_subset_counts(left_half)
-    right_sums = find_subset_counts(right_half)
-    
-    # Count valid partitions
-    total_partitions = 0
-    for left_sum, left_count in left_sums.items():
-        complement_sum = target_sum - left_sum
-        if complement_sum in right_sums:
-            total_partitions += left_count * right_sums[complement_sum]
-    
-    return total_partitions
+    # At this point, dp[target_sum] will contain the number of ways to make the subset
+    # We divide by 2 because each partition is counted twice (A,B and B,A)
+    return dp[target_sum] // 2
