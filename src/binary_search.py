@@ -36,9 +36,9 @@ def find_first_occurrence(arr, target):
         mid = (left + right) // 2
         
         if arr[mid] == target:
-            # Found a match, but continue searching left for first occurrence
-            result = mid
+            # Found a match, continue shifting left to find first occurrence
             right = mid - 1
+            result = mid
         elif arr[mid] < target:
             # Target is in the right half
             left = mid + 1
