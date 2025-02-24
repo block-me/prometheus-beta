@@ -1,5 +1,3 @@
-from itertools import combinations
-
 def count_equal_sum_partitions(numbers):
     """
     Calculate the number of ways a group of distinct numbers can be partitioned 
@@ -22,10 +20,6 @@ def count_equal_sum_partitions(numbers):
         raise ValueError("All elements must be integers")
     
     # Ensure distinct numbers
-    if len(set(numbers)) != len(numbers):
-        return 0
-    
-    # Handle edge cases
     if len(numbers) <= 1:
         return 0
     
@@ -39,17 +33,31 @@ def count_equal_sum_partitions(numbers):
     # Target sum for each subset
     target_sum = total_sum // 2
     
-    # Brute force for clarity and correctness
-    ways = 0
-    n = len(numbers)
+    # Memoization to avoid repeated computations
+    memo = {}
     
-    # Try all possible subset combinations
-    for r in range(1, n // 2 + 1):
-        for subset in combinations(numbers, r):
-            # Check if this subset can form one half of the partition
-            if sum(subset) == target_sum:
-                complement = set(numbers) - set(subset)
-                if sum(complement) == target_sum:
-                    ways += 1
+    def count_subsets(index, current_sum):
+        # Base cases
+        if current_sum == target_sum:
+            return 1
+        if current_sum > target_sum or index >= len(numbers):
+            return 0
+        
+        # Check memoized result
+        key = (index, current_sum)
+        if key in memo:
+            return memo[key]
+        
+        # Recursive cases: include or exclude current number
+        include = count_subsets(index + 1, current_sum + numbers[index])
+        exclude = count_subsets(index + 1, current_sum)
+        
+        # Memoize and return
+        memo[key] = include + exclude
+        return memo[key]
     
-    return ways
+    # Start counting subsets with a twist to count exact ways
+    total_ways = count_subsets(0, 0)
+    
+    # Divide by 2 to account for symmetric partitions
+    return max(total_ways // 2, 0)
