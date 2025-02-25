@@ -22,6 +22,8 @@ def longest_common_subsequence_length(str1: str, str2: str) -> int:
         0
         >>> longest_common_subsequence_length("test", "")
         0
+        >>> longest_common_subsequence_length("Hello", "hello")
+        0
     """
     # Validate input types
     if not isinstance(str1, str) or not isinstance(str2, str):
