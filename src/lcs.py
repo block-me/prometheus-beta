@@ -34,25 +34,20 @@ def longest_common_subsequence_length(str1: str, str2: str) -> int:
     if not str1 or not str2:
         return 0
     
-    # Compute LCS length manually ensuring case-sensitive comparison
-    lcs_length = 0
+    # Create a 2D matrix to store LCS lengths
+    m, n = len(str1), len(str2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
     
-    # Iterate through all possible subsequences
-    def find_lcs(i, j, current_length):
-        # Base case: reached the end of either string
-        if i == len(str1) or j == len(str2):
-            return current_length
-        
-        # If current characters match exactly (case-sensitive)
-        if str1[i] == str2[j]:
-            # Include this character and move forward in both strings
-            return find_lcs(i+1, j+1, current_length + 1)
-        
-        # Try skipping a character in either string
-        return max(
-            find_lcs(i+1, j, current_length),
-            find_lcs(i, j+1, current_length)
-        )
+    # Compute LCS lengths
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            # IMPORTANT: Explicitly compare characters with exact match
+            if str1[i-1] == str2[j-1]:
+                # If characters match exactly, add 1 to previous diagonal value
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                # If characters don't match, take max of previous computations
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
     
-    # Return the maximum LCS length
-    return find_lcs(0, 0, 0)
+    # Return the bottom-right cell which contains LCS length
+    return dp[m][n]
