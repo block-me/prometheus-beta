@@ -23,9 +23,11 @@ def test_no_common_subsequence():
 
 def test_case_sensitivity():
     """Test case sensitivity."""
+    # Strings with different cases should have 0 LCS
     assert longest_common_subsequence_length("Hello", "hello") == 0
     assert longest_common_subsequence_length("AbC", "abc") == 0
-    assert longest_common_subsequence_length("ABC", "abc") == 0
+    assert longest_common_subsequence_length("HELLO", "hello") == 0
+    assert longest_common_subsequence_length("Hello", "HELLO") == 0
 
 def test_invalid_inputs():
     """Test error handling for invalid input types."""
