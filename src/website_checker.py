@@ -23,8 +23,8 @@ def is_website_online(url: str, timeout: float = 5.0) -> bool:
         url = f'https://{url}'
     
     try:
-        # Send a HEAD request to minimize data transfer
-        response = requests.head(url, timeout=timeout)
+        # Use GET request instead of HEAD to ensure better compatibility
+        response = requests.get(url, timeout=timeout)
         
         # Check if the response was successful (status code 200-299)
         return 200 <= response.status_code < 300
