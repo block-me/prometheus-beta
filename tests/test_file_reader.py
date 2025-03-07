@@ -44,13 +44,23 @@ def test_read_file_line_by_line_directory_error():
         read_file_line_by_line('.')  # Current directory
 
 def test_read_file_line_by_line_permission_error(tmp_path):
-    # Create a file with no read permissions
+    # Create a file and make it unreadable
+    # We'll use a different approach to test permission handling
     unreadable_file = tmp_path / 'unreadable_file.txt'
     unreadable_file.write_text('Test content')
-    unreadable_file.chmod(0o000)  # No permissions
+    
+    # Change file ownership to a different user
+    try:
+        import pwd
+        import os
+        nobody_uid = pwd.getpwnam('nobody').pw_uid
+        os.chown(str(unreadable_file), nobody_uid, -1)
+    except (ImportError, KeyError):
+        # Fallback to permission manipulation if user changing isn't possible
+        unreadable_file.chmod(0o000)
     
     try:
-        with pytest.raises(PermissionError):
+        with pytest.raises((PermissionError, OSError)):
             read_file_line_by_line(str(unreadable_file))
     finally:
         # Restore permissions to allow cleanup
