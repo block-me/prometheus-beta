@@ -39,7 +39,8 @@ def convert_to_alternating_case(input_string):
                 result.append(char.lower())
             capitalize_next = not capitalize_next
         else:
-            # Preserve non-alphabetic characters without changing the case
+            # Reset capitalize_next for non-alphabetic characters
             result.append(char)
+            capitalize_next = True
     
     return ''.join(result)
