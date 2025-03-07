@@ -1,3 +1,5 @@
+import string
+
 def find_longest_word(sentence):
     """
     Find the longest word in a given sentence.
@@ -17,8 +19,10 @@ def find_longest_word(sentence):
     if not isinstance(sentence, str):
         raise TypeError("Input must be a string")
     
-    # Remove leading/trailing whitespace and split into words
-    words = sentence.strip().split()
+    # Remove punctuation and split into words
+    # Use string.punctuation to remove all punctuation marks
+    translator = str.maketrans('', '', string.punctuation)
+    words = sentence.translate(translator).strip().split()
     
     # Return empty string if no words
     if not words:
