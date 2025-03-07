@@ -1,3 +1,5 @@
+import re
+
 def convert_to_header_case(text: str) -> str:
     """
     Convert a given string to header case.
@@ -28,8 +30,8 @@ def convert_to_header_case(text: str) -> str:
     if not isinstance(text, str):
         raise TypeError("Input must be a string")
     
-    # Replace common separators with spaces
-    normalized = text.replace('_', ' ').replace('-', ' ')
+    # Replace multiple consecutive separators with a single space
+    normalized = re.sub(r'[_\-\s]+', ' ', text)
     
     # Handle camelCase by inserting spaces before capital letters
     chars = []
