@@ -7,7 +7,7 @@ def test_basic_sentence():
 
 def test_multiple_longest_words():
     """Test when multiple words have same max length."""
-    assert find_longest_word("cat dogs tiger mice") == "dogs"
+    assert find_longest_word("cat dogs tiger mice") == "tiger"
 
 def test_empty_string():
     """Test empty string input."""
