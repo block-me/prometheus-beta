@@ -1,5 +1,8 @@
 import logging
 
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
+
 def log_variable_type(variable):
     """
     Log the type of a given variable.
@@ -20,6 +23,6 @@ def log_variable_type(variable):
         var_type = type(variable).__name__
 
     # Log the type
-    logging.info(f"Variable type: {var_type}")
+    logger.info(f"Variable type: {var_type}")
     
     return var_type
