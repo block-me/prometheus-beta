@@ -1,5 +1,21 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 from collections import deque
+
+class TrieNode:
+    """
+    Node representation for the Aho-Corasick algorithm.
+    
+    Attributes:
+        children (dict): Dictionary of child nodes
+        failure_link (Optional[TrieNode]): Failure link to another node
+        output (Optional[str]): Pattern if this is the end of a pattern
+        is_end (bool): Whether this node represents the end of a pattern
+    """
+    def __init__(self):
+        self.children = {}
+        self.failure_link = None
+        self.output = None
+        self.is_end = False
 
 class AhoCorasick:
     """
@@ -7,11 +23,6 @@ class AhoCorasick:
     
     The Aho-Corasick algorithm allows for simultaneous matching of multiple 
     patterns in a given text with linear time complexity.
-    
-    Attributes:
-        trie (dict): The trie data structure for pattern matching
-        fail_links (dict): Failure links for efficient pattern matching
-        output_links (dict): Output links to track matched patterns
     """
     
     def __init__(self, patterns: List[str]):
@@ -32,16 +43,14 @@ class AhoCorasick:
         if not all(isinstance(p, str) for p in patterns):
             raise TypeError("All patterns must be strings")
         
-        # Initialize data structures
-        self.trie = {}
-        self.fail_links = {}
-        self.output_links = {}
+        # Initialize root node
+        self.root = TrieNode()
         
         # Build the trie
         for pattern in patterns:
             self._add_pattern(pattern)
         
-        # Construct failure and output links
+        # Construct failure links
         self._build_failure_links()
     
     def _add_pattern(self, pattern: str):
@@ -51,42 +60,47 @@ class AhoCorasick:
         Args:
             pattern (str): Pattern to add to the trie
         """
-        node = self.trie
+        node = self.root
         for char in pattern:
-            node = node.setdefault(char, {})
-        node['$'] = pattern  # Mark end of pattern
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        
+        # Mark end of pattern and store the full pattern
+        node.is_end = True
+        node.output = pattern
     
     def _build_failure_links(self):
         """
-        Construct failure and output links using BFS.
+        Construct failure links using BFS.
         """
-        # Initialize failure links for root
+        # Initialize queue for BFS
         queue = deque()
-        for char, child in self.trie.items():
-            if char != '$':
-                self.fail_links[child] = self.trie
-                queue.append(child)
         
-        # Build failure links
+        # Set initial failure links for root's direct children
+        for char, child in self.root.children.items():
+            child.failure_link = self.root
+            queue.append(child)
+        
+        # BFS to build failure links
         while queue:
-            node = queue.popleft()
-            for char, child in node.items():
-                if char == '$':
-                    continue
-                
+            current_node = queue.popleft()
+            
+            # Iterate through current node's children
+            for char, child in current_node.children.items():
                 queue.append(child)
                 
                 # Find failure link
-                failure_state = self.fail_links.get(node, self.trie)
-                while failure_state and char not in failure_state:
-                    failure_state = self.fail_links.get(failure_state, None)
-                    if failure_state is None:
-                        failure_state = self.trie
+                failure_candidate = current_node.failure_link
+                while failure_candidate:
+                    if char in failure_candidate.children:
+                        child.failure_link = failure_candidate.children[char]
+                        break
+                    failure_candidate = failure_candidate.failure_link
                 
-                if failure_state and char in failure_state:
-                    self.fail_links[child] = failure_state[char]
-                else:
-                    self.fail_links[child] = self.trie
+                # If no suitable failure link found, point to root
+                if child.failure_link is None:
+                    child.failure_link = self.root
     
     def find_all(self, text: str) -> List[Tuple[int, str]]:
         """
@@ -105,34 +119,34 @@ class AhoCorasick:
             raise TypeError("Text must be a string")
         
         matches = []
-        current_node = self.trie
+        current_node = self.root
         
         for i, char in enumerate(text):
-            # Move to next state
-            while current_node and char not in current_node:
-                current_node = self.fail_links.get(current_node, None)
+            # Move to next state or follow failure links
+            while current_node and char not in current_node.children:
+                current_node = current_node.failure_link
                 if current_node is None:
-                    current_node = self.trie
+                    current_node = self.root
                     break
             
             # Follow transition if possible
-            if current_node and char in current_node:
-                current_node = current_node[char]
+            if current_node and char in current_node.children:
+                current_node = current_node.children[char]
             else:
-                current_node = self.trie
+                current_node = self.root
             
-            # Check for matches
+            # Check for matches including failure links
             state = current_node
             while state:
-                if '$' in state:
-                    pattern = state['$']
-                    # Find all occurrences of this pattern
+                if state.is_end:
+                    pattern = state.output
+                    # Find the starting index of the match
                     idx = i - len(pattern) + 1
                     matches.append((idx, pattern))
                 
                 # Follow failure link
-                state = self.fail_links.get(state, None)
-                if state is None:
+                state = state.failure_link
+                if state == self.root:
                     break
         
         return matches
