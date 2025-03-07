@@ -46,9 +46,8 @@ class AhoCorasick:
         # Initialize root node
         self.root = TrieNode()
         
-        # Build the trie with sorted patterns to handle overlapping matches
-        sorted_patterns = sorted(patterns, key=len, reverse=True)
-        for pattern in sorted_patterns:
+        # Build the trie 
+        for pattern in patterns:
             self._add_pattern(pattern)
         
         # Construct failure links
@@ -120,44 +119,40 @@ class AhoCorasick:
             raise TypeError("Text must be a string")
         
         matches = []
+        current_node = self.root
         
-        # Iterate through all possible starting points
-        for start in range(len(text)):
-            current_node = self.root
-            
-            # Search from this starting point
-            for i in range(start, len(text)):
-                char = text[i]
-                
-                # Move to next state or follow failure links
-                while current_node and char not in current_node.children:
-                    current_node = current_node.failure_link
-                    if current_node is None:
-                        current_node = self.root
-                        break
-                
-                # Follow transition if possible
-                if current_node and char in current_node.children:
-                    current_node = current_node.children[char]
-                else:
+        # Track which indices we've matched at to avoid duplicates
+        matched_indices = {}
+        
+        for i, char in enumerate(text):
+            # Move to next state or follow failure links
+            while current_node and char not in current_node.children:
+                current_node = current_node.failure_link
+                if current_node is None:
                     current_node = self.root
-                
-                # Check for matches
-                state = current_node
-                while state and state != self.root:
-                    if state.is_end:
-                        pattern = state.output
-                        matches.append((start, pattern))
+                    break
+            
+            # Follow transition if possible
+            if current_node and char in current_node.children:
+                current_node = current_node.children[char]
+            else:
+                current_node = self.root
+            
+            # Check for matches including those through failure links
+            state = current_node
+            while state and state != self.root:
+                if state.is_end:
+                    pattern = state.output
+                    # Find the starting index of the match
+                    start_idx = i - len(pattern) + 1
                     
-                    # Follow failure link
-                    state = state.failure_link
+                    # Ensure this match hasn't been added before
+                    match_key = (start_idx, pattern)
+                    if match_key not in matched_indices:
+                        matches.append(match_key)
+                        matched_indices[match_key] = True
+                
+                # Follow failure link
+                state = state.failure_link
         
-        # Remove duplicates while preserving order
-        unique_matches = []
-        seen = set()
-        for match in matches:
-            if match not in seen:
-                unique_matches.append(match)
-                seen.add(match)
-        
-        return unique_matches
+        return matches
