@@ -8,10 +8,7 @@ def test_log_variable_type_int():
     """Test logging type for an integer."""
     # Capture log output
     log_capture = io.StringIO()
-    log_handler = logging.StreamHandler(log_capture)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(log_handler)
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(stream=log_capture, level=logging.INFO, format='%(message)s')
 
     # Call the function
     result = log_variable_type(42)
@@ -25,10 +22,7 @@ def test_log_variable_type_str():
     """Test logging type for a string."""
     # Capture log output
     log_capture = io.StringIO()
-    log_handler = logging.StreamHandler(log_capture)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(log_handler)
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(stream=log_capture, level=logging.INFO, format='%(message)s')
 
     # Call the function
     result = log_variable_type("hello")
@@ -42,10 +36,7 @@ def test_log_variable_type_list():
     """Test logging type for a list."""
     # Capture log output
     log_capture = io.StringIO()
-    log_handler = logging.StreamHandler(log_capture)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(log_handler)
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(stream=log_capture, level=logging.INFO, format='%(message)s')
 
     # Call the function
     result = log_variable_type([1, 2, 3])
@@ -59,10 +50,7 @@ def test_log_variable_type_none():
     """Test logging type for None."""
     # Capture log output
     log_capture = io.StringIO()
-    log_handler = logging.StreamHandler(log_capture)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(log_handler)
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(stream=log_capture, level=logging.INFO, format='%(message)s')
 
     # Call the function
     result = log_variable_type(None)
@@ -81,10 +69,7 @@ def test_log_variable_type_custom_class():
 
     # Capture log output
     log_capture = io.StringIO()
-    log_handler = logging.StreamHandler(log_capture)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(log_handler)
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(stream=log_capture, level=logging.INFO, format='%(message)s')
 
     # Call the function
     result = log_variable_type(test_instance)
