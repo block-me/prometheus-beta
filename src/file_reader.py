@@ -12,7 +12,6 @@ def read_file_line_by_line(file_path):
 
     Raises:
         FileNotFoundError: If the specified file does not exist.
-        PermissionError: If there are insufficient permissions to read the file.
         IsADirectoryError: If the path points to a directory instead of a file.
         IOError: If there is an error reading the file.
     """
@@ -27,7 +26,5 @@ def read_file_line_by_line(file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
             # Using .readlines() with rstrip() to handle different newline scenarios
             return [line.rstrip('\r\n') for line in file.readlines()]
-    except PermissionError:
-        raise PermissionError(f"Permission denied when trying to read '{file_path}'.")
     except IOError as e:
         raise IOError(f"An error occurred while reading the file: {e}")
