@@ -135,9 +135,9 @@ class AhoCorasick:
             else:
                 current_node = self.root
             
-            # Check for matches including failure links
+            # Check for matches including those through failure links
             state = current_node
-            while state:
+            while state and state != self.root:
                 if state.is_end:
                     pattern = state.output
                     # Find the starting index of the match
@@ -146,7 +146,5 @@ class AhoCorasick:
                 
                 # Follow failure link
                 state = state.failure_link
-                if state == self.root:
-                    break
         
         return matches
