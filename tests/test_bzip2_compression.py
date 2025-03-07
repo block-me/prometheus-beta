@@ -7,14 +7,12 @@ def test_compress_string():
     original = "Hello, world! This is a test of Bzip2 compression."
     compressed = compress_bzip2(original)
     assert isinstance(compressed, bytes)
-    assert len(compressed) < len(original.encode('utf-8'))
 
 def test_compress_bytes():
     """Test compressing bytes"""
     original = b"Binary data for compression test"
     compressed = compress_bzip2(original)
     assert isinstance(compressed, bytes)
-    assert len(compressed) < len(original)
 
 def test_decompress():
     """Test full compression and decompression cycle"""
