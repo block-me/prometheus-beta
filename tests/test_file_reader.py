@@ -1,50 +1,57 @@
 import os
+import tempfile
 import pytest
 from src.file_reader import read_file_line_by_line
 
 def test_read_file_line_by_line_normal():
-    # Create a temporary test file
-    test_file_path = 'tests/test_file.txt'
-    with open(test_file_path, 'w', encoding='utf-8') as f:
-        f.write("First line\nSecond line\nThird line")
+    with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as temp_file:
+        temp_file.write("First line\nSecond line\nThird line")
+        temp_file.close()
     
     try:
-        # Test reading the file
-        result = read_file_line_by_line(test_file_path)
+        result = read_file_line_by_line(temp_file.name)
         assert result == ["First line", "Second line", "Third line"]
     finally:
-        # Clean up the test file
-        os.remove(test_file_path)
+        os.unlink(temp_file.name)
 
 def test_read_file_line_by_line_empty_file():
-    # Create an empty test file
-    test_file_path = 'tests/empty_test_file.txt'
-    with open(test_file_path, 'w', encoding='utf-8') as f:
-        pass
+    with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as temp_file:
+        temp_file.close()
     
     try:
-        # Test reading an empty file
-        result = read_file_line_by_line(test_file_path)
+        result = read_file_line_by_line(temp_file.name)
         assert result == []
     finally:
-        # Clean up the test file
-        os.remove(test_file_path)
+        os.unlink(temp_file.name)
 
 def test_read_file_line_by_line_file_not_found():
-    # Test file not found scenario
     with pytest.raises(FileNotFoundError):
         read_file_line_by_line('non_existent_file.txt')
 
 def test_read_file_line_by_line_with_newline_characters():
-    # Create a test file with various newline characters
-    test_file_path = 'tests/newline_test_file.txt'
-    with open(test_file_path, 'w', encoding='utf-8') as f:
-        f.write("Line 1\n\nLine 2\n\n\nLine 3")
+    with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as temp_file:
+        temp_file.write("Line 1\n\nLine 2\n\n\nLine 3")
+        temp_file.close()
     
     try:
-        # Test reading file with multiple newline characters
-        result = read_file_line_by_line(test_file_path)
+        result = read_file_line_by_line(temp_file.name)
         assert result == ["Line 1", "", "Line 2", "", "", "Line 3"]
     finally:
-        # Clean up the test file
-        os.remove(test_file_path)
+        os.unlink(temp_file.name)
+
+def test_read_file_line_by_line_directory_error():
+    with pytest.raises(IsADirectoryError):
+        read_file_line_by_line('.')  # Current directory
+
+def test_read_file_line_by_line_permission_error(tmp_path):
+    # Create a file with no read permissions
+    unreadable_file = tmp_path / 'unreadable_file.txt'
+    unreadable_file.write_text('Test content')
+    unreadable_file.chmod(0o000)  # No permissions
+    
+    try:
+        with pytest.raises(PermissionError):
+            read_file_line_by_line(str(unreadable_file))
+    finally:
+        # Restore permissions to allow cleanup
+        unreadable_file.chmod(0o644)
