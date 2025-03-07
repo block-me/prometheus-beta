@@ -13,15 +13,20 @@ def log_variable_type(variable):
     Returns:
         str: The string representation of the variable's type.
     """
-    # Set up basic logging configuration if not already configured
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
+    # Clear any existing handlers to prevent duplicate logging
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    # Create a logger and set the level
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
 
     # Handle None separately as type(None) returns NoneType
     if variable is None:
-        logging.info("Variable type: NoneType")
+        logger.info("Variable type: NoneType")
         return "NoneType"
 
     # Get the type of the variable and log it
     var_type = type(variable).__name__
-    logging.info(f"Variable type: {var_type}")
+    logger.info(f"Variable type: {var_type}")
     return var_type
