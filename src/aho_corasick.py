@@ -46,8 +46,9 @@ class AhoCorasick:
         # Initialize root node
         self.root = TrieNode()
         
-        # Build the trie
-        for pattern in patterns:
+        # Build the trie with sorted patterns to handle overlapping matches
+        sorted_patterns = sorted(patterns, key=len, reverse=True)
+        for pattern in sorted_patterns:
             self._add_pattern(pattern)
         
         # Construct failure links
@@ -119,32 +120,44 @@ class AhoCorasick:
             raise TypeError("Text must be a string")
         
         matches = []
-        current_node = self.root
         
-        for i, char in enumerate(text):
-            # Move to next state or follow failure links
-            while current_node and char not in current_node.children:
-                current_node = current_node.failure_link
-                if current_node is None:
-                    current_node = self.root
-                    break
+        # Iterate through all possible starting points
+        for start in range(len(text)):
+            current_node = self.root
             
-            # Follow transition if possible
-            if current_node and char in current_node.children:
-                current_node = current_node.children[char]
-            else:
-                current_node = self.root
-            
-            # Check for matches including those through failure links
-            state = current_node
-            while state and state != self.root:
-                if state.is_end:
-                    pattern = state.output
-                    # Find the starting index of the match
-                    idx = i - len(pattern) + 1
-                    matches.append((idx, pattern))
+            # Search from this starting point
+            for i in range(start, len(text)):
+                char = text[i]
                 
-                # Follow failure link
-                state = state.failure_link
+                # Move to next state or follow failure links
+                while current_node and char not in current_node.children:
+                    current_node = current_node.failure_link
+                    if current_node is None:
+                        current_node = self.root
+                        break
+                
+                # Follow transition if possible
+                if current_node and char in current_node.children:
+                    current_node = current_node.children[char]
+                else:
+                    current_node = self.root
+                
+                # Check for matches
+                state = current_node
+                while state and state != self.root:
+                    if state.is_end:
+                        pattern = state.output
+                        matches.append((start, pattern))
+                    
+                    # Follow failure link
+                    state = state.failure_link
         
-        return matches
+        # Remove duplicates while preserving order
+        unique_matches = []
+        seen = set()
+        for match in matches:
+            if match not in seen:
+                unique_matches.append(match)
+                seen.add(match)
+        
+        return unique_matches
