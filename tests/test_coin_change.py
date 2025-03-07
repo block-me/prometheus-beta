@@ -30,7 +30,7 @@ def test_error_handling():
 
 def test_complex_coin_denominations():
     """Test scenarios with complex coin denominations"""
-    assert min_coins([1, 5, 10, 25], 67) == 5  # Most efficient combination
+    assert min_coins([1, 5, 10, 25], 67) == 6  # Most efficient combination
     assert min_coins([186, 419, 83, 408], 6249) == 20  # Large denominations
 
 def test_negative_amount():
