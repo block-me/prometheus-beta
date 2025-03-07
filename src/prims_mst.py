@@ -29,8 +29,15 @@ def prims_minimum_spanning_tree(graph: Dict[str, Dict[str, float]]) -> Union[Lis
             if not isinstance(weight, (int, float)):
                 raise ValueError(f"Invalid weight for edge {node} -> {neighbor}")
     
-    # Choose an arbitrary starting node
-    start_node = list(graph.keys())[0]
+    # Check for nodes with no edges
+    if all(len(neighbors) == 0 for neighbors in graph.values()):
+        return []
+    
+    # Choose first node with connections as starting node
+    start_node = next((node for node, neighbors in graph.items() if neighbors), None)
+    
+    if start_node is None:
+        return None
     
     # Initialize data structures
     mst = []  # Minimum Spanning Tree edges
@@ -54,9 +61,10 @@ def prims_minimum_spanning_tree(graph: Dict[str, Dict[str, float]]) -> Union[Lis
         visited.add(destination)
         
         # Add new edges from the newly visited node
-        for next_neighbor, next_weight in graph[destination].items():
-            if next_neighbor not in visited:
-                heapq.heappush(edges_heap, (next_weight, destination, next_neighbor))
+        if destination in graph:
+            for next_neighbor, next_weight in graph[destination].items():
+                if next_neighbor not in visited:
+                    heapq.heappush(edges_heap, (next_weight, destination, next_neighbor))
     
     # Check if all nodes are visited (graph is connected)
     if len(visited) != len(graph):
