@@ -16,18 +16,22 @@ def log_user_input(log_file: Optional[str] = None) -> str:
     Raises:
         ValueError: If the input is empty or contains only whitespace.
     """
+    # Ensure a unique logger for each call
+    logger = logging.getLogger(f'user_input_logger_{id(log_file)}')
+    logger.handlers.clear()  # Remove any existing handlers
+    
     # Configure logging
     if log_file:
-        logging.basicConfig(
-            filename=log_file, 
-            level=logging.INFO, 
-            format='%(asctime)s - %(message)s'
-        )
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+        logger.addHandler(file_handler)
+        logger.setLevel(logging.INFO)
     else:
-        logging.basicConfig(
-            level=logging.INFO, 
-            format='%(asctime)s - %(message)s'
-        )
+        # Use a StreamHandler for default logging
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+        logger.addHandler(stream_handler)
+        logger.setLevel(logging.INFO)
 
     # Prompt and capture user input
     try:
@@ -38,9 +42,9 @@ def log_user_input(log_file: Optional[str] = None) -> str:
             raise ValueError("Input cannot be empty")
         
         # Log the input
-        logging.info(user_input)
+        logger.info(user_input)
         
         return user_input
     except (KeyboardInterrupt, EOFError):
-        logging.info("Input operation cancelled")
+        logger.info("Input operation cancelled")
         raise
