@@ -13,6 +13,9 @@ def min_coins(coins, amount):
     Raises:
         ValueError: If coins list is empty or contains non-positive values.
     """
+    # Sort coins in descending order for greedy approach optimization
+    coins = sorted(coins, reverse=True)
+    
     # Validate input
     if not coins:
         raise ValueError("Coin denominations list cannot be empty")
