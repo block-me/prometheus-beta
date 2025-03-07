@@ -16,9 +16,9 @@ def test_default_log_level(capsys):
 def test_different_log_levels(capsys):
     """Test logging with different log levels."""
     test_cases = [
-        ('WARNING', "[WARNING] Warning message"),
-        ('ERROR', "[ERROR] Error message"),
-        ('DEBUG', "[DEBUG] Debug message")
+        ('WARNING', "[WARNING] Test message"),
+        ('ERROR', "[ERROR] Test message"),
+        ('DEBUG', "[DEBUG] Test message")
     ]
     
     for level, expected_output in test_cases:
