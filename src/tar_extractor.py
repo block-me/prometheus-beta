@@ -13,7 +13,7 @@ def extract_tar_archive(archive_path: str,
         extract_path (Optional[str], optional): Directory to extract files to. 
             Defaults to the archive's directory if not specified.
         specific_files (Optional[List[str]], optional): List of specific files to extract. 
-            Defaults to extracting all files.
+            Defaults to extracting all files. If an empty list, no files are extracted.
 
     Returns:
         List[str]: List of paths to extracted files.
@@ -36,6 +36,10 @@ def extract_tar_archive(archive_path: str,
 
     # List to store extracted file paths
     extracted_files = []
+
+    # If specific_files is an empty list, return empty list immediately
+    if specific_files is not None and len(specific_files) == 0:
+        return extracted_files
 
     try:
         # Open the tar archive
