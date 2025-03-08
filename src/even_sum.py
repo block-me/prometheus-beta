@@ -20,4 +20,4 @@ def sum_even_numbers(numbers):
         raise TypeError("All elements must be integers")
     
     # Sum only the even numbers
-    return sum(num for num in numbers if num % 2 == 0)
+    return sum(num for num in numbers if num % 2 == 0 or num % 2 == -0)
