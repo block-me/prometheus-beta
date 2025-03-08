@@ -28,12 +28,11 @@ def two_sum_check(numbers, target_sum):
     for num in numbers:
         complement = target_sum - num
         
-        # Special handling for specific cases if needed
-        if num == complement and numbers.count(num) >= 2:
-            return True
-        
+        # Check first if the complement exists
         if complement in seen:
             return True
+        
+        # Add the current number to seen
         seen.add(num)
     
     return False
