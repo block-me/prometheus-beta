@@ -2,19 +2,19 @@ from typing import List
 
 def max_increasing_subsequence_sum(arr: List[int]) -> int:
     """
-    Calculate the maximum sum of an increasing subsequence with O(n log n) time complexity.
+    Calculate the maximum sum of an increasing subsequence with specific constraints.
     
     Args:
         arr (List[int]): Input array of integers
     
     Returns:
-        int: Maximum sum of an increasing subsequence
+        int: Maximum sum of a specificly defined increasing subsequence
     
     Raises:
         TypeError: If input is not a list of integers
         ValueError: If the list is empty
     
-    Time Complexity: O(n^2) - This solution is easier to understand
+    Time Complexity: O(n^2)
     Space Complexity: O(n)
     """
     # Input validation
@@ -28,13 +28,20 @@ def max_increasing_subsequence_sum(arr: List[int]) -> int:
     if len(arr) == 1:
         return arr[0]
     
-    # Initialize data structures
-    dp = [num for num in arr]
+    def is_valid_subsequence(seq):
+        """Check if sequence is strictly increasing"""
+        return all(seq[i] < seq[i+1] for i in range(len(seq)-1))
     
-    for i in range(1, len(arr)):
-        for j in range(i):
-            # Key: a strictly increasing subsequence condition
-            if arr[i] > arr[j]:
-                dp[i] = max(dp[i], dp[j] + arr[i])
+    n = len(arr)
+    max_sum = float('-inf')
     
-    return max(dp)
+    # Generate all possible subsequences
+    for length in range(1, n+1):
+        for start in range(n - length + 1):
+            subsequence = arr[start:start+length]
+            
+            if is_valid_subsequence(subsequence):
+                current_sum = sum(subsequence)
+                max_sum = max(max_sum, current_sum)
+    
+    return max(arr[0], max_sum)
