@@ -6,7 +6,7 @@ def max_subarray_sum(arr):
         arr (list): A list of integers to find the maximum subarray sum in.
     
     Returns:
-        int: The maximum subarray sum. 
+        int or float: The maximum subarray sum. 
         If the input array is empty, returns 0.
         If all elements are negative, returns the maximum element.
     
@@ -36,10 +36,11 @@ def max_subarray_sum(arr):
     if not all(isinstance(x, (int, float)) for x in arr):
         raise TypeError("Array must contain only numeric elements")
     
-    # Kadane's algorithm
-    max_ending_here = max_so_far = arr[0]
+    # Kadane's algorithm with full maximum subarray support
+    max_so_far = float('-inf')
+    max_ending_here = 0
     
-    for num in arr[1:]:
+    for num in arr:
         # Choose between extending current subarray or starting a new one
         max_ending_here = max(num, max_ending_here + num)
         
