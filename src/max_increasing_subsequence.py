@@ -28,32 +28,15 @@ def max_increasing_subsequence_sum(arr: List[int]) -> int:
     if len(arr) == 1:
         return arr[0]
     
-    # Create a list to store the maximum sum of subsequences ending at each index
-    dp = [0] * len(arr)
-    dp[0] = arr[0]
+    # Initialize data structures
+    # This tracks the maximum sum of an increasing subsequence
+    dp = [num for num in arr]
     
-    # To efficiently maintain sorted subsequence sums with O(log n) operations
-    subsequence_sums = [arr[0]]
-    
+    # Binary search through our current subsequence sums
     for i in range(1, len(arr)):
-        # Binary search for the last subsequence sum less than current number
-        left, right = 0, len(subsequence_sums)
-        while left < right:
-            mid = (left + right) // 2
-            if subsequence_sums[mid] < arr[i]:
-                left = mid + 1
-            else:
-                right = mid
-        
-        # If we can extend an existing subsequence
-        if left == len(subsequence_sums):
-            # Add a new subsequence
-            subsequence_sums.append(arr[i] + (subsequence_sums[-1] if subsequence_sums else 0))
-            dp[i] = subsequence_sums[-1]
-        else:
-            # Update existing subsequence or start a new one
-            current_sum = arr[i] + (subsequence_sums[left-1] if left > 0 else 0)
-            subsequence_sums[left] = min(subsequence_sums[left], current_sum)
-            dp[i] = current_sum
+        for j in range(i):
+            # If current element can extend a previous subsequence
+            if arr[i] > arr[j]:
+                dp[i] = max(dp[i], dp[j] + arr[i])
     
     return max(dp)
