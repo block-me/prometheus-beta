@@ -27,6 +27,11 @@ def two_sum_check(numbers, target_sum):
     
     for num in numbers:
         complement = target_sum - num
+        
+        # Special handling for specific cases if needed
+        if num == complement and numbers.count(num) >= 2:
+            return True
+        
         if complement in seen:
             return True
         seen.add(num)
