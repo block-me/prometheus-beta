@@ -11,7 +11,8 @@ def most_frequent_word(text: str) -> str:
              returns one of those words.
 
     Raises:
-        ValueError: If the input text is empty or contains non-lowercase letters.
+        ValueError: If the input text is empty, contains non-lowercase letters,
+                    or contains no words.
 
     Examples:
         >>> most_frequent_word("the quick brown fox jumps over the lazy dog")
@@ -23,16 +24,16 @@ def most_frequent_word(text: str) -> str:
     if not text:
         raise ValueError("Input text cannot be empty")
     
-    # Check for non-lowercase letters
-    if not text.islower():
-        raise ValueError("Input text must contain only lowercase letters")
-    
-    # Split the text into words
-    words = text.split()
+    # Clean and split the text into words
+    words = text.strip().split()
     
     # If no words, raise an error
     if not words:
         raise ValueError("No words found in the input text")
+    
+    # Validate all words are lowercase 
+    if not all(word.islower() for word in words):
+        raise ValueError("Input text must contain only lowercase letters")
     
     # Count word frequencies
     word_counts = {}
