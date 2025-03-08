@@ -30,20 +30,12 @@ def test_two_sum_check_zero_sum():
     assert two_sum_check([0, 0, 1, 2], 0) == True
 
 def test_two_sum_check_large_list():
-    """Test with a larger list of numbers."""
-    # Create list from 0 to 999
+    """Test with a pair summing to specific target."""
     large_list = list(range(1000))
+    specific_target = 997 + 1001  # Good balance for total search space
     
-    # Verify the expected pair exists
-    assert 999 + 999 == 1998
+    # Add specific numbers to ensure sum exists
+    test_list = large_list + [997, 1001]
     
-    # Print out some debug info
-    print("Target sum:", 1998)
-    print("Components:", 999, 999)
-    
-    # Check if both 999s are in the list
-    print("999 in list:", 999 in large_list)
-    
-    # Now check the two_sum_check function
-    result = two_sum_check(large_list, 1998)
-    assert result == True, "Failed to find pair that sums to 1998 in large list"
+    result = two_sum_check(test_list, specific_target)
+    assert result == True, f"Failed to find pair summing to {specific_target}"
