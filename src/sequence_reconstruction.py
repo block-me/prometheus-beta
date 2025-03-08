@@ -22,24 +22,31 @@ def min_sequence_transformations(original, array):
         raise ValueError("Inputs cannot be empty")
     
     # Use Longest Common Subsequence (LCS) approach
-    # Number of operations = len(original) + len(array) - 2 * LCS length
-    def lcs_length(seq1, seq2):
+    def lcs(seq1, seq2):
         m, n = len(seq1), len(seq2)
         # Create DP table
         dp = [[0] * (n + 1) for _ in range(m + 1)]
+        
+        # Create backtracking matrix to track matching elements
+        backtrack = [[0] * (n + 1) for _ in range(m + 1)]
         
         # Build LCS length matrix
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 if seq1[i-1] == seq2[j-1]:
                     dp[i][j] = dp[i-1][j-1] + 1
+                    backtrack[i][j] = 1  # Match
                 else:
-                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+                    if dp[i-1][j] > dp[i][j-1]:
+                        dp[i][j] = dp[i-1][j]
+                    else:
+                        dp[i][j] = dp[i][j-1]
         
         return dp[m][n]
     
-    # Calculate LCS length
-    lcs = lcs_length(original, array)
+    # Calculate LCS length and count removals/insertions
+    lcs_length = lcs(original, array)
     
-    # Minimum operations = elements to remove + elements to insert
-    return len(original) + len(array) - 2 * lcs
+    # Total unique elements to remove/insert = 
+    # all elements in original + all elements in array - 2 * elements in common
+    return len(original) + len(array) - 2 * lcs_length
