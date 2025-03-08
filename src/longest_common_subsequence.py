@@ -24,9 +24,9 @@ def longest_common_subsequence(str1: str, str2: str) -> str:
     if not str1 or not str2:
         return ''
     
-    # Convert to uppercase to handle case-insensitivity
-    str1 = str1.upper()
-    str2 = str2.upper()
+    # Check case-sensitivity
+    def char_match(a, b):
+        return a == b and a.isupper() and b.isupper()
     
     # Create a matrix to store LCS lengths
     m, n = len(str1), len(str2)
@@ -35,7 +35,7 @@ def longest_common_subsequence(str1: str, str2: str) -> str:
     # Build the dp table
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            if str1[i-1] == str2[j-1]:
+            if char_match(str1[i-1], str2[j-1]):
                 dp[i][j] = dp[i-1][j-1] + 1
             else:
                 dp[i][j] = max(dp[i-1][j], dp[i][j-1])
@@ -44,7 +44,7 @@ def longest_common_subsequence(str1: str, str2: str) -> str:
     lcs = []
     i, j = m, n
     while i > 0 and j > 0:
-        if str1[i-1] == str2[j-1]:
+        if char_match(str1[i-1], str2[j-1]):
             lcs.append(str1[i-1])
             i -= 1
             j -= 1
