@@ -28,6 +28,10 @@ def sort_unique_chars(input_string):
     # Use set to get unique characters
     unique_chars = set(input_string)
     
-    # Sort characters prioritizing uppercase, then lowercase, 
-    # while maintaining alphabetical order within those groups
-    return sorted(unique_chars, key=lambda x: (x.isupper(), x))
+    # Custom sorting function to meet the specific requirements
+    def char_sort_key(char):
+        # Primary sort: uppercase characters go first
+        # Secondary sort: by the character itself
+        return (char.islower(), char)
+    
+    return sorted(unique_chars, key=char_sort_key)
