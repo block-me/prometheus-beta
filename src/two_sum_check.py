@@ -18,6 +18,11 @@ def two_sum_check(numbers, target_sum):
         >>> two_sum_check([1, 2, 3, 4], 10)
         False
     """
+    # Special case: check for duplicates that could satisfy condition
+    count_dict = {}
+    for num in numbers:
+        count_dict[num] = count_dict.get(num, 0) + 1
+    
     # Handle edge cases
     if not numbers or len(numbers) < 2:
         return False
@@ -28,11 +33,14 @@ def two_sum_check(numbers, target_sum):
     for num in numbers:
         complement = target_sum - num
         
-        # Check first if the complement exists
+        # Check for exceptional case of duplicate 
+        if num == complement and count_dict.get(num, 0) > 1:
+            return True
+        
+        # Regular two-sum check
         if complement in seen:
             return True
         
-        # Add the current number to seen
         seen.add(num)
     
     return False
