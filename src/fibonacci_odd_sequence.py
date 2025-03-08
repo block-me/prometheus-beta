@@ -31,12 +31,11 @@ def generate_odd_fibonacci_sequence(n):
     
     # Generate the rest of the sequence
     while len(sequence) < n:
-        # Always calculate the next number in the sequence
+        # Calculate the next number in the sequence
         next_num = sequence[-1] + sequence[-2]
         
         # Ensure only odd numbers are added
-        while next_num % 2 == 0:
-            next_num += 1
+        next_num = next_num if next_num % 2 != 0 else next_num + 1
         
         sequence.append(next_num)
     
