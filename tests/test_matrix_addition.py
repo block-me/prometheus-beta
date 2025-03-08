@@ -25,8 +25,13 @@ def test_float_matrix_addition():
     """Test matrix addition with floating-point numbers."""
     matrix1 = [[1.5, 2.5], [3.5, 4.5]]
     matrix2 = [[0.5, 1.5], [2.5, 3.5]]
+    result = add_matrices(matrix1, matrix2)
     expected = [[2.0, 4.0], [6.0, 8.0]]
-    assert add_matrices(matrix1, matrix2) == pytest.approx(expected)
+    
+    # Check each element with approx
+    for i in range(len(result)):
+        for j in range(len(result[i])):
+            assert result[i][j] == pytest.approx(expected[i][j])
 
 def test_matrix_size_mismatch_rows():
     """Test error when matrices have different row counts."""
