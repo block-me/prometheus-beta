@@ -3,23 +3,23 @@ from src.array_min_max import find_min_max
 
 def test_find_min_max_normal_case():
     """Test finding min and max in a typical list of numbers."""
-    assert find_min_max([1, 2, 3, 4, 5]) == (1, 5)
+    assert find_min_max([1, 2, 3, 4, 5]) == [1, 5]
 
 def test_find_min_max_with_negative_numbers():
     """Test finding min and max with negative numbers."""
-    assert find_min_max([-1, -5, 0, 10, 3]) == (-5, 10)
+    assert find_min_max([-1, -5, 0, 10, 3]) == [-5, 10]
 
 def test_find_min_max_with_decimals():
     """Test finding min and max with decimal numbers."""
-    assert find_min_max([1.5, 2.3, -0.5, 10.1]) == (-0.5, 10.1)
+    assert find_min_max([1.5, 2.3, -0.5, 10.1]) == [-0.5, 10.1]
 
 def test_find_min_max_single_element():
     """Test finding min and max with a single element."""
-    assert find_min_max([42]) == (42, 42)
+    assert find_min_max([42]) == [42, 42]
 
 def test_find_min_max_empty_list():
-    """Test that an empty list returns (None, None)."""
-    assert find_min_max([]) == (None, None)
+    """Test that an empty list returns [None, None]."""
+    assert find_min_max([]) == [None, None]
 
 def test_find_min_max_non_list_input_raises_error():
     """Test that non-list input raises a TypeError."""
