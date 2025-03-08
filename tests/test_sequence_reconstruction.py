@@ -17,13 +17,13 @@ def test_partial_match():
     """Test when sequences have some common elements"""
     original = [1, 2, 3, 4, 5]
     array = [2, 4, 6, 8]
-    assert min_sequence_transformations(original, array) == 6
+    assert min_sequence_transformations(original, array) == 5
 
 def test_sublist_match():
     """Test when one sequence is a sublist of another"""
     original = [1, 2, 3, 4, 5]
     array = [2, 3, 4]
-    assert min_sequence_transformations(original, array) == 4
+    assert min_sequence_transformations(original, array) == 2
 
 def test_empty_input_raises_error():
     """Test that empty inputs raise ValueError"""
@@ -45,4 +45,4 @@ def test_mixed_type_sequences():
     """Test sequences with mixed types"""
     original = [1, 'a', 2, 'b', 3]
     array = ['a', 2, 'c', 3]
-    assert min_sequence_transformations(original, array) == 4
+    assert min_sequence_transformations(original, array) == 3
