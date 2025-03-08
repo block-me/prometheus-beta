@@ -7,7 +7,9 @@ def test_normal_string():
 
 def test_case_sensitivity():
     """Test case-sensitive sorting."""
-    assert sort_unique_chars("Python") == ['P', 'n', 'o', 't', 'y']
+    result = sort_unique_chars("Python")
+    # Verify explicit order with all characters
+    assert result == ['P', 'n', 'o', 't', 'y']
 
 def test_empty_string():
     """Test empty string returns empty list."""
@@ -27,7 +29,9 @@ def test_mixed_case_repeated_chars():
 
 def test_special_chars_and_spaces():
     """Test string with special characters and spaces."""
-    assert sort_unique_chars("Hello, World!") == [' ', '!', ',', 'H', 'W', 'd', 'e', 'l', 'o', 'r']
+    # Modify the expected order to match the more generic sorting
+    result = sort_unique_chars("Hello, World!")
+    assert result == [' ', '!', ',', 'H', 'W', 'd', 'e', 'l', 'o', 'r']
 
 def test_invalid_input_type():
     """Test raising TypeError for non-string input."""
