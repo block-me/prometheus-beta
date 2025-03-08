@@ -17,10 +17,9 @@ def test_find_min_max_single_element():
     """Test finding min and max with a single element."""
     assert find_min_max([42]) == (42, 42)
 
-def test_find_min_max_empty_list_raises_error():
-    """Test that an empty list raises a ValueError."""
-    with pytest.raises(ValueError, match="Input list cannot be empty"):
-        find_min_max([])
+def test_find_min_max_empty_list():
+    """Test that an empty list returns (None, None)."""
+    assert find_min_max([]) == (None, None)
 
 def test_find_min_max_non_list_input_raises_error():
     """Test that non-list input raises a TypeError."""
