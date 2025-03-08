@@ -26,4 +26,5 @@ def sort_unique_chars(input_string):
         raise TypeError("Input must be a string")
     
     # Use set to get unique characters, then sort 
-    return sorted(set(input_string))
+    # Using sorted with key=lambda x: (x.swapcase(), x) to handle case-sensitive sorting
+    return sorted(set(input_string), key=lambda x: (x.swapcase(), x))
