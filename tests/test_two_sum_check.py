@@ -37,6 +37,13 @@ def test_two_sum_check_large_list():
     # Verify the expected pair exists
     assert 999 + 999 == 1998
     
+    # Print out some debug info
+    print("Target sum:", 1998)
+    print("Components:", 999, 999)
+    
+    # Check if both 999s are in the list
+    print("999 in list:", 999 in large_list)
+    
     # Now check the two_sum_check function
     result = two_sum_check(large_list, 1998)
     assert result == True, "Failed to find pair that sums to 1998 in large list"
