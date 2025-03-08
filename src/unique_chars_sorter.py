@@ -26,12 +26,4 @@ def sort_unique_chars(input_string):
         raise TypeError("Input must be a string")
     
     # Use set to get unique characters
-    unique_chars = set(input_string)
-    
-    # Custom sorting function to meet the specific requirements
-    def char_sort_key(char):
-        # Primary sort: uppercase characters go first
-        # Secondary sort: by the character itself
-        return (char.islower(), char)
-    
-    return sorted(unique_chars, key=char_sort_key)
+    unique_chars = sorted(set(input_string))
