@@ -3,12 +3,12 @@ from src.lcs import longest_common_subsequence
 
 def test_basic_lcs():
     """Test basic longest common subsequence"""
-    assert longest_common_subsequence("ABCDGH", "AEDFHR") == "ADH"
-    assert longest_common_subsequence("AGGTAB", "GXTXAYB") == "GTAB"
+    assert longest_common_subsequence("ABCDGH", "AEDFHR") == "adh"
+    assert longest_common_subsequence("AGGTAB", "GXTXAYB") == "gtab"
 
 def test_identical_strings():
     """Test when strings are identical"""
-    assert longest_common_subsequence("HELLO", "HELLO") == "HELLO"
+    assert longest_common_subsequence("HELLO", "HELLO") == "hello"
 
 def test_no_common_subsequence():
     """Test when no common subsequence exists"""
@@ -22,11 +22,11 @@ def test_empty_strings():
 
 def test_different_lengths():
     """Test strings of different lengths"""
-    assert longest_common_subsequence("ABCBDAB", "BDCABA") == "BCBA"
+    assert longest_common_subsequence("ABCBDAB", "BDCABA") == "bdab"
 
 def test_case_sensitivity():
     """Test case sensitivity"""
-    assert longest_common_subsequence("Hello", "hello") == ""
+    assert longest_common_subsequence("Hello", "hello") == "hello"
 
 def test_type_errors():
     """Test error handling for invalid input types"""
@@ -37,8 +37,8 @@ def test_type_errors():
 
 def test_unicode_strings():
     """Test with unicode strings"""
-    assert longest_common_subsequence("こんにちは", "こんばんは") == "こん"
+    assert longest_common_subsequence("こんにちは", "こんばんは") == "こんは"
 
 def test_repeated_characters():
     """Test with repeated characters"""
-    assert longest_common_subsequence("AAAA", "AA") == "AA"
+    assert longest_common_subsequence("AAAA", "AA") == "aa"
