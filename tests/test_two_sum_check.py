@@ -31,5 +31,12 @@ def test_two_sum_check_zero_sum():
 
 def test_two_sum_check_large_list():
     """Test with a larger list of numbers."""
+    # Create list from 0 to 999
     large_list = list(range(1000))
-    assert two_sum_check(large_list, 1998) == True  # 999 + 999 = 1998
+    
+    # Verify the expected pair exists
+    assert 999 + 999 == 1998
+    
+    # Now check the two_sum_check function
+    result = two_sum_check(large_list, 1998)
+    assert result == True, "Failed to find pair that sums to 1998 in large list"
