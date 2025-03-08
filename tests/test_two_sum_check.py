@@ -32,4 +32,4 @@ def test_two_sum_check_zero_sum():
 def test_two_sum_check_large_list():
     """Test with a larger list of numbers."""
     large_list = list(range(1000))
-    assert two_sum_check(large_list, 1998) == True
+    assert two_sum_check(large_list, 1998) == True  # 999 + 999 = 1998
