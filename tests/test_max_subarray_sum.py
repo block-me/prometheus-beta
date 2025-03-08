@@ -7,7 +7,7 @@ def test_positive_numbers():
 
 def test_mixed_numbers():
     """Test max subarray sum with mixed positive and negative numbers."""
-    assert max_subarray_sum([1, -2, 3, 10, -4, 7, 2, -5]) == 22
+    assert max_subarray_sum([1, -2, 3, 10, -4, 7, 2, -5]) == 18
 
 def test_all_negative_numbers():
     """Test max subarray sum with all negative numbers."""
@@ -38,4 +38,4 @@ def test_invalid_input_non_numeric():
 
 def test_floating_point_numbers():
     """Test max subarray sum with floating-point numbers."""
-    assert max_subarray_sum([1.5, -2.5, 3.7, 0.5]) == 3.7
+    assert max_subarray_sum([1.5, -2.5, 3.7, 0.5]) == 4.2
