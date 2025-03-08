@@ -19,7 +19,7 @@ def test_sum_even_numbers_empty_list():
 
 def test_sum_even_numbers_negative_even():
     """Test summing a list with negative even numbers."""
-    assert sum_even_numbers([-2, -4, 1, 3, 4]) == -6
+    assert sum_even_numbers([-2, -4, 1, 3, 4]) == -2
 
 def test_sum_even_numbers_invalid_input_type():
     """Test raising TypeError for non-list input."""
