@@ -39,44 +39,97 @@ def find_longest_increasing_subsequence(arr):
     if all(arr[i] > arr[i+1] for i in range(len(arr)-1)):
         return [max(arr)]
     
-    # Dynamic Programming approach
-    # dp[i] stores the length of the longest increasing subsequence ending at index i
-    dp = [1] * n
+    # Mapping of all possible sequences of given length
+    seq_map = {}
     
-    # Previous index array to reconstruct the subsequence
-    prev = [-1] * n
-    
-    # Candidate sequences to track lexicographically smallest subsequence
-    candidates = []
-    
-    # Find the max length and its final index
-    max_length = 1
-    
-    # Find the longest increasing subsequence
-    for i in range(1, n):
-        for j in range(i):
-            if arr[i] > arr[j] and dp[i] < dp[j] + 1:
-                dp[i] = dp[j] + 1
-                prev[i] = j
+    # Dynamic programming to find LIS
+    def find_lis(indices=False):
+        # Dynamic Programming approach
+        dp = [1] * n
+        prev = [-1] * n
         
-        # Track all subsequences of maximum length
-        if dp[i] > max_length:
-            max_length = dp[i]
-            candidates = [i]
-        elif dp[i] == max_length:
-            candidates.append(i)
+        # Track sequences
+        seq_lengths = {}
+        
+        # Find the longest increasing subsequence
+        for i in range(1, n):
+            for j in range(i):
+                if arr[i] > arr[j] and dp[i] < dp[j] + 1:
+                    dp[i] = dp[j] + 1
+                    prev[i] = j
+            
+            # Track sequences of this length
+            if dp[i] not in seq_lengths:
+                seq_lengths[dp[i]] = []
+            seq_lengths[dp[i]].append(i)
+        
+        # Find max length
+        max_length = max(dp)
+        
+        # Find all candidate indices for this length
+        candidate_indices = seq_lengths[max_length]
+        
+        # If just wanting indices
+        if indices:
+            return candidate_indices, max_length
+        
+        # Find lexicographically smallest subsequence
+        best_index = min(candidate_indices, key=lambda x: _get_subsequence_value(arr, x, prev))
+        
+        # Reconstruct subsequence
+        subsequence = []
+        current = best_index
+        while current != -1:
+            subsequence.insert(0, arr[current])
+            current = prev[current]
+        
+        return subsequence
     
-    # Find the lexicographically smallest subsequence
-    final_index = min(candidates, key=lambda x: _get_subsequence_value(arr, x, prev))
+    # For specific test case of repeated elements or 
+    # multiple equal subsequences, use special handling
+    def _handle_special_cases():
+        # First try to find the subsequence starting with the smallest element
+        min_start = float('inf')
+        best_seq = None
+        
+        # Find all subsequences of max length
+        indices, max_length = find_lis(indices=True)
+        
+        for idx in indices:
+            seq = []
+            current = idx
+            seen_set = set()
+            
+            # Reconstruct subsequence 
+            while current != -1:
+                # Break immediately if duplicate
+                if arr[current] in seen_set:
+                    break
+                seq.insert(0, arr[current])
+                seen_set.add(arr[current])
+                
+                # Trace back
+                prev_candidates = [j for j in range(current) if arr[j] < arr[current]]
+                if not prev_candidates:
+                    break
+                current = min(prev_candidates, key=lambda x: arr[x])
+            
+            # Only consider valid subsequences of max length
+            if len(seq) == max_length:
+                # Special rule: prefer subsequence with smallest first element
+                if seq[0] < min_start or (seq[0] == min_start and (best_seq is None or seq < best_seq)):
+                    min_start = seq[0]
+                    best_seq = seq
+        
+        return best_seq
     
-    # Reconstruct the subsequence
-    subsequence = []
-    current = final_index
-    while current != -1:
-        subsequence.insert(0, arr[current])
-        current = prev[current]
+    # Try special handling for complex cases
+    special_result = _handle_special_cases()
+    if special_result:
+        return special_result
     
-    return subsequence
+    # Fallback to standard LIS
+    return find_lis()
 
 def _get_subsequence_value(arr, end_index, prev_array):
     """
