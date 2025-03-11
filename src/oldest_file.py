@@ -34,5 +34,5 @@ def find_oldest_file(directory: Union[str, os.PathLike]) -> Optional[str]:
     if not files:
         return None
     
-    # Find the oldest file based on creation time
-    return min(files, key=os.path.getctime)
+    # Find the oldest file based on modification time
+    return min(files, key=os.path.getmtime)
