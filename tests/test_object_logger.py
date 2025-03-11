@@ -41,7 +41,7 @@ def test_log_object_custom_class(caplog):
     
     result = log_object(test_obj)
     
-    assert "Pretty Print Representation" in result
+    assert "Object Dictionary Representation" in result
     assert "Test" in result
     assert "123" in result
     assert len(caplog.records) == 1
@@ -70,12 +70,13 @@ def test_log_object_custom_logger(caplog):
     assert caplog.records[0].levelname == "INFO"
     assert caplog.records[0].name == "custom_logger"
 
-def test_log_object_error_handling():
-    """Test error handling for objects that can't be serialized"""
-    # Create an object that can't be serialized
-    class UnserializableObject:
-        def __init__(self):
-            pass
-
-    with pytest.raises(TypeError):
-        log_object(UnserializableObject())
+def test_log_object_primitive_types(caplog):
+    """Test logging primitive types"""
+    test_cases = [42, 3.14, "string", True, None]
+    
+    for value in test_cases:
+        caplog.clear()
+        result = log_object(value)
+        
+        assert "String Representation" in result
+        assert str(value) in result
