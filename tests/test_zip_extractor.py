@@ -3,6 +3,7 @@ import pytest
 import zipfile
 import tempfile
 from src.zip_extractor import extract_zip_files
+import shutil
 
 
 @pytest.fixture
@@ -31,10 +32,8 @@ def test_extract_zip_files_default_path(sample_zip_file):
         assert os.path.exists(file_path)
     
     # Clean up extracted files
-    for file_path in extracted_files:
-        os.remove(file_path)
-    os.remove(os.path.join(os.path.dirname(sample_zip_file), 'subfolder/file3.txt'))
-    os.rmdir(os.path.join(os.path.dirname(sample_zip_file), 'subfolder'))
+    extracted_dir = os.path.dirname(extracted_files[0])
+    shutil.rmtree(extracted_dir)
 
 
 def test_extract_zip_files_custom_path(sample_zip_file):
