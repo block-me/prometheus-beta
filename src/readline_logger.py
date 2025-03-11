@@ -19,7 +19,7 @@ class ReadlineLogger:
                 If not provided, a default logger will be created.
         """
         self.logger = logger or logging.getLogger(__name__)
-        self._original_hook = None
+        self._original_hook = readline.get_completer()
     
     def start_logging(self, log_level: int = logging.INFO) -> None:
         """
@@ -41,9 +41,6 @@ class ReadlineLogger:
             except Exception as e:
                 self.logger.error(f"Error logging readline input: {e}")
         
-        # Store the original completer hook
-        self._original_hook = readline.get_completer()
-        
         # Set the new logging completer hook
         readline.set_completer(logging_hook)
     
@@ -51,9 +48,8 @@ class ReadlineLogger:
         """
         Stop logging readline inputs and restore the original completer hook.
         """
-        if self._original_hook is not None:
-            readline.set_completer(self._original_hook)
-            self._original_hook = None
+        # Restore the original completer hook
+        readline.set_completer(self._original_hook)
     
     def log_input(self, prompt: str, log_level: int = logging.INFO) -> str:
         """
