@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 def calculate_days_between_dates(date1: str, date2: str) -> int:
     """
@@ -14,6 +15,12 @@ def calculate_days_between_dates(date1: str, date2: str) -> int:
     Raises:
         ValueError: If dates are not in the correct format or are invalid
     """
+    # Validate date format using regex
+    date_pattern = r'^\d{4}-\d{2}-\d{2}$'
+    
+    if not (re.match(date_pattern, date1) and re.match(date_pattern, date2)):
+        raise ValueError("Invalid date format. Please use 'YYYY-MM-DD'.")
+
     try:
         # Parse dates using datetime
         parsed_date1 = datetime.strptime(date1, '%Y-%m-%d')
