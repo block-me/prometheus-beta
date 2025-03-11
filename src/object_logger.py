@@ -1,6 +1,7 @@
 import json
 import logging
 import pprint
+import inspect
 
 def log_object(obj, log_level=logging.INFO, logger_name='default_logger'):
     """
@@ -26,9 +27,16 @@ def log_object(obj, log_level=logging.INFO, logger_name='default_logger'):
             json_str = json.dumps(obj, indent=2)
             formatted_output = f"JSON Representation:\n{json_str}"
         except (TypeError, ValueError):
-            # If JSON fails, use pretty print
-            formatter = pprint.PrettyPrinter(indent=2)
-            formatted_output = f"Pretty Print Representation:\n{formatter.pformat(obj)}"
+            # If JSON fails, check if the object has a dict or repr representation
+            if hasattr(obj, '__dict__'):
+                # Use object's __dict__ for custom objects
+                obj_dict = obj.__dict__
+                json_str = json.dumps(obj_dict, indent=2)
+                formatted_output = f"Object Dictionary Representation:\n{json_str}"
+            else:
+                # Fallback to string representation
+                str_repr = str(obj)
+                formatted_output = f"String Representation:\n{str_repr}"
 
         # Log the formatted output at the specified log level
         log_method = getattr(logger, logging.getLevelName(log_level).lower())
