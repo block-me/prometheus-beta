@@ -83,7 +83,7 @@ def kmp_search(text, pattern):
         # If full pattern is matched, record the match
         if pattern_idx == len(pattern):
             matches.append(text_idx - pattern_idx)
-            # Continue searching by updating pattern index
+            # Continue searching by updating pattern index to allow overlapping matches
             pattern_idx = lps[pattern_idx - 1]
         
         # If characters don't match and we're not at the start of pattern
