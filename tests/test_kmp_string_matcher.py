@@ -13,7 +13,7 @@ def test_compute_lps_array():
 def test_kmp_search_basic():
     # Basic pattern matching tests
     assert kmp_search("AABAACAADAABAABA", "AABA") == [0, 9, 12]
-    assert kmp_search("ABABABCABABABCABABABC", "ABABC") == [4, 16]
+    assert kmp_search("ABABABCABABABCABABABC", "ABABC") == [2, 9, 16]
     assert kmp_search("hello world", "lo") == [3]
     
     # Test with no matches
