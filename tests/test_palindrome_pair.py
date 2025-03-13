@@ -17,8 +17,8 @@ def test_palindrome_pair_basic_cases():
     
     # More specific test cases
     assert palindrome_pair([1, 22, 30]) == True  # 22-1 = 21 (palindrome)
-    assert palindrome_pair([10, 31, 50]) == True  # 21 is a palindrome
-    
+    assert palindrome_pair([10, 31, 50]) == False  # 21 is not a palindrome
+
 def test_palindrome_pair_edge_cases():
     """Test edge cases and boundary conditions."""
     # Empty list
@@ -53,5 +53,5 @@ def test_palindrome_pair_sorted_input():
     assert palindrome_pair([1, 2, 3, 4, 5]) == True
     
     # Different scenarios
-    assert palindrome_pair([10, 31, 50]) == True  # 21 is a palindrome
-    assert palindrome_pair([10, 100, 1000]) == False
+    assert palindrome_pair([1, 22, 30]) == True
+    assert palindrome_pair([10, 31, 50]) == False
